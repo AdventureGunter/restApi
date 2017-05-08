@@ -26,7 +26,7 @@ router.post('/', function(req, res, next) {
     let name = req.body.name;
     let password = req.body.password;
 
-    if(!name || !password) res.json({error: 'vvedi normalnie dannie. ueba'});
+    if(!name || !password) res.json({error: 'paste correct data'});
 
     else {
         User.findOne({name: req.body.name}, function (err, data) {
