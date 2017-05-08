@@ -11,13 +11,13 @@ module.exports = function getUserByTocen(url, req, res, next) {
         if (token) {
             jwt.verify(token, 'lalala', function(err, decoded) {
                 if (err) {
-                    return res.json({ success: false, message: 'Failed to authenticate token.' });
+                    return res.status(400).json({ success: false, ErrorCode : "invalid_request", Error :"Invalid Authorization Code" });
                 } else {
                     req.decoded = decoded;
                     //console.log(decoded._doc);
                     //console.log(url);
                     if (url === '/users') next();
-                    if (url === '/session')res.json(decoded._doc);
+                    if (url === '/session')res.status(200).json(decoded._doc);
                 }
             });
         } else {
