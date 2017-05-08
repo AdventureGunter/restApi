@@ -1,4 +1,5 @@
 # Windows image file caches
+mode_modules
 Thumbs.db
 ehthumbs.db
 
@@ -38,7 +39,7 @@ $RECYCLE.BIN/
 .TemporaryItems
 .Trashes
 .VolumeIcon.icns
-.mode_modules/
+
 
 # Directories potentially created on remote AFP share
 .AppleDB
