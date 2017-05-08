@@ -1,5 +1,5 @@
 # Windows image file caches
-mode_modules
+node_modules/
 Thumbs.db
 ehthumbs.db
 
