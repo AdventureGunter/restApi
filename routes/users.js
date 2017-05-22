@@ -3,9 +3,10 @@ const router = express.Router();
 const User = require('../db/user');
 const getUserByTocen = require('./getTocenHandler');
 
-router.use(function(req, res, next) {
+
+/*router.use(function(req, res, next) {
     getUserByTocen('/users', req, res, next);
-});
+});*/
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -20,6 +21,11 @@ router.get('/*', function(req, res, next) {
         if (err) res.json(err);
         else res.json(data);
     });
+});
+
+router.use(function(req, res, next) {
+    if (req.isAuthenticated()) next();
+    else (res.redirect('/'));
 });
 
 router.post('/', function(req, res, next) {

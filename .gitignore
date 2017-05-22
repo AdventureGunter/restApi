@@ -1,5 +1,6 @@
 # Windows image file caches
 node_modules/
+regex_parser/cache/
 Thumbs.db
 ehthumbs.db
 
