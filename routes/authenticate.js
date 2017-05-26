@@ -3,74 +3,92 @@
  */
 const express = require('express');
 const router = express.Router();
-const jwt    = require('jsonwebtoken');
-const User = require('E:\\internChi\\restApi\\db\\user.js');
 const passport = require('passport');
 
-router.get('/', function (req, res, next) {
-    /*getUserByTocen('/session', req, res, next);*/ res.json(req.user);
+//const User = require('../db/user.js');
+const autController = require('../controllers/authenticateController.js');
+
+
+router.get('/', autController.checkSessionForGet, function (req, res, next) {
+    res.json(req.user);
 });
 
-router.get('/logout', function(req, res){
-    req.session.destroy(function (err) {
-        res.redirect('/'); //Inside a callback… bulletproof!
-    });
-});
+// LOCAL STRATEGY
 
-router.get('/facebook', (req, res, next) => {checkSession (req, res, next)}, passport.authenticate('facebook'));
+router.post('/local-signup',
+    passport.authenticate('local-signup', { successRedirect: '/session',
+        failureRedirect: '/'})
+);
+
+router.post('/local-login',
+    passport.authenticate('local-login', { successRedirect: '/session',
+        failureRedirect: '/'})
+);
+
+//  FACEBOOK ROUTES
+
+router.get('/facebook',autController.checkSessionForAut,
+    passport.authenticate('facebook'/*, { scope: ['profile', 'email'] }*/));
 
 router.get('/facebook/callback',
-    passport.authenticate('facebook', { successRedirect: '/',
-        failureRedirect: '/login' }));
+    passport.authenticate('facebook', { successRedirect: '/session',
+        failureRedirect: '/' }));
 
-router.get('/google', (req, res, next) => {checkSession (req, res, next)},
-    passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/plus.login'] }));
+
+// GOOGLE ROUTES
+
+router.get('/google', autController.checkSessionForAut,
+    passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 router.get('/google/callback',
-    passport.authenticate('google', { failureRedirect: '/login' }),
-    function(req, res) {
-        res.redirect('/');
+    passport.authenticate('google', { successRedirect: '/session',
+    failureRedirect: '/' }));
+
+// LOGOUT
+
+router.get('/logout', function(req, res, next){
+    req.session.destroy(function (err) {
+        if (err) next(err);
+        else res.redirect('/'); //Inside a callback… bulletproof!
     });
-
-router.post('/', function(req, res) {
-    if(!req.body.name || !req.body.password) res.status(401).json({ success: false, message: 'invalid data pasted' });
-    else {
-        // find the user
-        User.findOne({
-            name: req.body.name
-        }, function(err, user) {
-
-            if (err) throw err;
-
-            if (!user) {
-                res.status(401).json({ success: false, message: 'Authentication failed. User not found.' });
-            } else if (user) {
-
-                // check if password matches
-                if (user.password !== req.body.password) {
-                    res.status(401).json({ success: false, message: 'Authentication failed. Wrong password.' });
-                } else {
-
-                    // if user is found and password is right
-                    // create a token
-                    let token = jwt.sign(user, 'lalala', {
-                        expiresIn: 86400 // expires in 24 hours
-                    });
-                    req.token = token;
-                    res.json({
-                        success: true,
-                        message: 'Enjoy your token!',
-                        token: token
-                    });
-                }
-            }
-        });
-    }
 });
 
-function checkSession (req, res, next) {
-    if (req.isAuthenticated()) res.redirect('/');
-    else next();
-}
-
 module.exports = router;
+
+
+
+/*router.post('/', function(req, res) {
+ if(!req.body.name || !req.body.password) res.status(401).json({ success: false, message: 'invalid data pasted' });
+ else {
+ // find the user
+ User.findOne({
+ name: req.body.name
+ }, function(err, user) {
+
+ if (err) throw err;
+
+ if (!user) {
+ res.status(401).json({ success: false, message: 'Authentication failed. User not found.' });
+ } else if (user) {
+
+ // check if password matches
+ if (user.password !== req.body.password) {
+ res.status(401).json({ success: false, message: 'Authentication failed. Wrong password.' });
+ } else {
+
+ // if user is found and password is right
+ // create a token
+ let token = jwt.sign(user, 'lalala', {
+ expiresIn: 86400 // expires in 24 hours
+ });
+ req.token = token;
+ res.json({
+ success: true,
+ message: 'Enjoy your token!',
+ token: token
+ });
+ }
+ }
+ });
+ }
+ });*/

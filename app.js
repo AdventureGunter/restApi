@@ -4,19 +4,14 @@ const favicon = require('serve-favicon');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const flash = require('connect-flash');
+const validator = require('express-validator');
+//const flash = require('connect-flash');
 
 
 const session = require('express-session');
 const passport = require('passport');
 
-const User = require('E:\\internChi\\restApi\\db\\user.js');
-
 const config = require('config');
-let options = {
-    server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } },
-    replset: { socketOptions: { keepAlive: 1, connectTimeoutMS : 30000 } }
-};
 
 const index = require('./routes/index');
 const users = require('./routes/users');
@@ -40,18 +35,41 @@ require('./passport/passportConfig.js')(passport);
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
-app.use(bodyParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json({ type: 'application/json'}));
-app.use(session({ secret: 'keyboard cat' }));
+app.use(validator());
+app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true
+}));
 app.use(passport.initialize());
-app.use(flash());
 app.use(passport.session());
+
 app.use('/parser', parser);
 app.use('/', index);
 app.use('/users', users);
 app.use('/session', authenticate);
+
+
+/*app.use(express.static(path.join(__dirname, 'public')));
+app.use(cookieParser());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json({ type: 'application/json'}));
+app.use(validator);
+app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use('/parser', parser);
+app.use('/', index);
+app.use('/users', users);
+app.use('/session', authenticate);*/
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,3 +1,16 @@
 {
-    "DBHost": "mongodb://stas:80954249030cnfc@ds133221.mlab.com:33221/jwtrestapi"
+    "config" : {
+        "DBHost": "mongodb://stas:80954249030cnfc@ds133221.mlab.com:33221/jwtrestapi",
+        "Passport" : {
+            "google" : {
+                "id" : "1049236447666-rr8cpitlpok8l07fu3q18cv4klosdkm3.apps.googleusercontent.com",
+                "secret": "oGJANWG55O0FWPUZOC6Q2wOC"
+            },
+            "facebook": {
+                "id" : "438019803232655",
+                "secret": "a2823a6d7c299160bdacbbb821e5c823"
+            }
+        }
+    }
+
 }

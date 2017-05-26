@@ -27,7 +27,7 @@ var server = http.createServer(app);
  */
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://stas:80954249030cnfc@ds133221.mlab.com:33221/jwtrestapi')
+mongoose.connect(config.get('config.DBHost'))
     .then(() => {
         server.listen(port);
         server.on('error', onError);

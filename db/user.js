@@ -5,16 +5,25 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 // set up a mongoose model
-const User = new Schema({
-    name: String,
-    password: String,
+const userSchema = new Schema({
     username: String,
+    password: String,
+
+    fullName: String,
+
     provider: String,
     email: String,
-    profile: JSON,
+
+    //profile: JSON,
+
     providerUserId:  String,
-    accessToken: String,
+    //accessToken: String,
+
     dateAdded: {type: Date, default: Date.now}
 });
 
-module.exports = mongoose.model('User', User);
+
+
+
+let User = mongoose.model('User', userSchema);
+module.exports = User;
